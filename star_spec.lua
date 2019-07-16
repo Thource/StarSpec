@@ -1,11 +1,17 @@
---@include lib/class.lua
-require("lib/class.lua")
+local function requireStarUtil()
+    --@include lib/star_util/util.lua
+    require("lib/star_util/util.lua")
+    --@include lib/star_util/class.lua
+    require("lib/star_util/class.lua")
+end
+try(requireStarUtil, function()
+    throw("StarSpec depends on StarUtil: get it from https://github.com/thource/star_util")
+end)
 
 local verbose = false
 local cones = find.byModel("models/props_junk/trafficcone001a.mdl", function(e)
     return chip():getPos():getDistance(e:getPos()) < 200
 end)
-
 if #cones > 0 then
     verbose = true
 end
@@ -266,6 +272,10 @@ local function describeFunction(test, description, body)
 end
 
 local function describeClass(testPlatform, class, body)
+    if not class then
+        error("nil class passed to describe")
+    end
+
     local testSuite = TestSuite.new()
     testSuite.testClass = class
     table.insert(testPlatform.testSuites, testSuite)
@@ -282,6 +292,9 @@ local function describeClass(testPlatform, class, body)
 end
 
 function spec(body)
+    -- only unit test on the owner's client
+    if CLIENT and owner() ~= player() then return end
+
     local testPlatform = TestPlatform.new()
     local specFuncs = {
         describe = function(class, body)
@@ -295,10 +308,9 @@ function spec(body)
         file()
     end
     allFuncs.loadDir = function(path)
-        local files = dodir(path)
+        local files = util.dodir(path)
 
         for i, file in pairs(files) do
-            print(file)
             appendfenv(file, specFuncs)
             file()
         end

@@ -1,13 +1,13 @@
---@include lib/star_spec/star_spec.lua
-require("lib/star_spec/star_spec.lua")
+--@include ../star_spec.lua
+require("../star_spec.lua")
 
---@includedir lib/star_spec/example/classes
-dodir("lib/star_spec/example/classes")
+--@includedir classes
+util.dodir("classes")
 
 spec(function()
-    --@includedir lib/star_spec/example/specs
-    loadDir("lib/star_spec/example/specs")
+    --@includedir specs
+    loadDir("specs")
 
-    -- load("lib/star_spec/example/specs/banana.lua")
-    -- load("lib/star_spec/example/specs/car.lua")
+    -- load("specs/banana.lua")
+    -- load("specs/car.lua")
 end)
