@@ -1,6 +1,3 @@
---@include lib/star_util/class.lua
-require("lib/star_util/class.lua")
-
 class("Banana", function(klass, instance)
     function klass:new()
         self.isYellow = true

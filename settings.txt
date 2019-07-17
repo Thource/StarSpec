@@ -1,0 +1,4 @@
+return {
+    libPath = 'lib',
+    verboseModel = 'models/props_junk/trafficcone001a.mdl'
+}

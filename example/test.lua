@@ -6,8 +6,8 @@ util.dodir("classes")
 
 spec(function()
     --@includedir specs
-    loadDir("specs")
+    util.dodir("specs")
 
-    -- load("specs/banana.lua")
-    -- load("specs/car.lua")
+    -- dofile("specs/banana.lua")
+    -- dofile("specs/car.lua")
 end)
