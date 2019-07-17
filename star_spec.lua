@@ -166,7 +166,7 @@ local Comparator = local_class("Comparator", function(klass, instance)
 end)
 
 Comparator.Equal = local_class("Equal", function(klass, instance)
-    extend(Comparator)
+    klass.extend(Comparator)
 
     instance.compare = function(self)
         local pass = self.givenValue == self.expectedValue
