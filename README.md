@@ -30,5 +30,7 @@ spec(function()
 end)
 ```
 
+Included with StarSpec is an example project, please look at the example project to see how StarSpec can be used.
+
 ## Documentation
 Coming soon
