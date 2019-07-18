@@ -1,21 +1,21 @@
-local Base = require('base.lua')
+local ValueBase = require('value_base.lua')
 
 return local_class("Equal", function(klass, instance)
-    klass.extend(Base)
+    klass.extend(ValueBase)
 
-    instance.compare = function(self)
+    function instance:compare()
         local pass = self.givenValue == self.expectedValue
         if self.invert then pass = not pass end
         return pass
     end
 
-    instance.describe = function(self)
+    function instance:describe()
         if self.invert then return self:describeInvert() end
 
         return tostring(self.givenValue) .. " == " .. tostring(self.expectedValue)
     end
 
-    instance.describeInvert = function(self)
+    function instance:describeInvert()
         return tostring(self.givenValue) .. " ~= " .. tostring(self.expectedValue)
     end
 end)

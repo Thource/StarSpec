@@ -2,13 +2,13 @@
 local Settings = require('settings.txt')
 
 local function requireStarUtil()
-    --@include lib/star_util/util.lua
-    require(Settings.libPath .. "/star_util/util.lua")
-    --@include lib/star_util/class.lua
-    require(Settings.libPath .. "/star_util/class.lua")
+    --@include lib/StarUtil/util.lua
+    require(Settings.libPath .. "/StarUtil/util.lua")
+    --@include lib/StarUtil/class.lua
+    require(Settings.libPath .. "/StarUtil/class.lua")
 end
 try(requireStarUtil, function()
-    throw("StarSpec depends on StarUtil: get it from https://github.com/thource/star_util")
+    throw("StarSpec depends on StarUtil: get it from https://github.com/thource/StarUtil")
 end)
 
 local verboseProps = find.byModel(Settings.verboseModel, function(e)
@@ -23,6 +23,7 @@ if SERVER then envPrefix = "[SERVER] " end
 local Test = require('classes/test.lua')
 local TestPlatform = require('classes/test_platform.lua')
 local TestSuite = require('classes/test_suite.lua')
+local Allow = require('classes/allow.lua')
 local Expectation = require('classes/expectation.lua')
 
 local testPlatform, test
@@ -89,7 +90,39 @@ function describe(...)
     end
 end
 
-function it(description, body)
+function context(description, body)
+    if not testPlatform then
+        throw("context() called before spec()")
+    end
+
+    local suite = getCurrentTestSuite()
+    if not suite then
+        throw("context() called before describe()")
+    end
+
+    test = Test.new()
+    test.testSuite = suite
+    if test.description ~= "" then test.description = test.description .. " " end
+    test.description = test.description .. description
+    
+    body()
+end
+
+function clone(obj, seen)
+    -- Handle non-tables and previously-seen tables.
+    if type(obj) ~= 'table' then return obj end
+    if seen and seen[obj] then return seen[obj] end
+
+    -- New table; mark it as seen an copy recursively.
+    local s = seen or {}
+    s[obj] = res
+    for k, v in pairs(obj) do
+        res[clone(k, s)] = clone(v, s)
+    end
+    return res
+end
+
+function it(description, itBody)
     if not testPlatform then
         throw("it() called before spec()")
     end
@@ -104,20 +137,32 @@ function it(description, body)
     
     table.insert(testCopy.testSuite.tests, testCopy)
 
-    body()
+    setfenv(itBody, table.copy(_G))
+    itBody()
 end
 
-function expect(value)
+function expect(target)
     local test = getCurrentTest()
 
     if not test then
         throw("expect() called before it()")
     end
 
-    local expectation = Expectation.new()
-    expectation.value = value
+    local expectation = Expectation.new(target)
 
     table.insert(test.expectations, expectation)
 
     return expectation
+end
+
+function allow(target)
+    local test = getCurrentTest()
+
+    if not test then
+        throw("allow() called before it()")
+    end
+
+    local allow = Allow.new(target)
+
+    return allow
 end

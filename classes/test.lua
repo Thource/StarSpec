@@ -8,7 +8,7 @@ return local_class("Test", function(klass, instance)
         self.result = nil -- TestResult
     end
 
-    instance.run = function(self)
+    function instance:run()
         self.result = TestResult.new()
         self.result.test = self
 
@@ -27,11 +27,11 @@ return local_class("Test", function(klass, instance)
         end
     end
 
-    instance.printResult = function(self)
+    function instance:printResult()
         local resultAndReason = "pass"
 
         if not self.result:didPass() then
-            resultAndReason = "fail (" .. self.result.failedExpectation.comparator:describe() .. ")"
+            resultAndReason = "fail (" .. self.result.failedExpectation.comparator:describe() .. ") @ " .. self.result.failedExpectation.source
         end
 
         local message = self.description .. ": " .. resultAndReason

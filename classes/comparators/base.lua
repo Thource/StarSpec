@@ -1,15 +1,13 @@
 return local_class("Base", function(klass, instance)
-    function klass:new(givenValue, expectedValue)
-        self.givenValue = givenValue
-        self.expectedValue = expectedValue
+    function klass:new()
         self.invert = false
     end
 
-    instance.compare = function(self)
+    function instance:compare()
         return false
     end
 
-    instance.describe = function(self)
+    function instance:describe()
         return "???"
     end
 end)

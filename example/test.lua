@@ -1,5 +1,5 @@
---@include ../star_spec.lua
-require("../star_spec.lua")
+--@include ../StarSpec.lua
+require("../StarSpec.lua")
 
 --@includedir classes
 util.dodir("classes")
