@@ -1,4 +1,4 @@
-# star_spec
+# StarSpec
 StarSpec is a unit testing framework for Starfall - A lua based programming language in WireMod, a Garry's Mod addon.
 
 ## Installation
